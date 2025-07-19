@@ -1,20 +1,47 @@
-
 import os
 import requests
+import openai
 
+# Load secrets from GitHub Actions
+webhook_url = os.getenv("DISCORD_WEBHOOK")
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Generate GPT-powered message
+def generate_update():
+    prompt = (
+        "You are an expert automotive industry analyst. Generate a concise and informative summary "
+        "about the latest trends in the automotive sector, especially related to Tesla. Include information on:\n"
+        "- Tesla’s vehicle business\n"
+        "- Tesla’s non-automotive ventures such as Optimus (robotics), energy/solar business\n"
+        "- Relevant news about Elon Musk if it's connected to Tesla\n"
+        "- Global EV sales comparison (e.g., Tesla vs. BYD, Volkswagen, Toyota)\n\n"
+        "If possible, include the source link next to the statement — but only if the link is known or provided. "
+        "Do not make up links. If no URL is given, just skip it.\n\n"
+        "Assume this will be posted in a Discord server for car enthusiasts and developers in Japan. "
+        "Make it sound fresh and insightful. Include emojis where helpful. "
+        "If nothing major changed, still write a brief note saying so."
+    )
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # Or "gpt-3.5-turbo" if you prefer
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.7
+    )
+    return response.choices[0].message.content
+
+# Send message to Discord
 def send_discord_alert(message):
-    webhook_url = os.getenv("DISCORD_WEBHOOK")
-    data = {
-        "content": message
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    response = requests.post(webhook_url, json=data, headers=headers)
-    if response.status_code != 204:
-        print(f"❌ Failed to send alert: {response.status_code} - {response.text}")
+    data = {"content": message}
+    headers = {"Content-Type": "application/json"}
+    res = requests.post(webhook_url, json=data, headers=headers)
+    if res.status_code != 204:
+        print(f"❌ Failed to send alert: {res.status_code} - {res.text}")
     else:
         print("✅ Alert sent to Discord!")
 
-# Example message
-send_discord_alert("🚗 Daily EV alert from bot-alert-carindustory: Everything looks good!")
+# Run
+message = generate_update()
+send_discord_alert(message)
