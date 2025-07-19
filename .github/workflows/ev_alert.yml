@@ -1,0 +1,28 @@
+name: Car Industry Alert Bot
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # Runs every day at 08:00 JST
+  workflow_dispatch:       # Optional: manual trigger
+
+jobs:
+  run-alert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run the alert script
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python script/main.py
+
