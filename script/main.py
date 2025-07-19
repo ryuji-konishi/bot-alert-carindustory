@@ -13,10 +13,13 @@ client = OpenAI(api_key=openai_api_key)
 def generate_update():
     prompt = (
         "You are an expert automotive industry analyst. Generate a brief, concise and informative summary "
-        "about the latest trends in the automotive sector, especially related to Tesla. Include information on:\n"
+        "about the very latest developments and trends in the automotive sector, especially related to Tesla. "
+        "Focus on:\n"
+        "- The most recent and notable daily news involving Tesla or the broader EV industry\n"
         "- Tesla’s vehicle business\n"
         "- Tesla’s non-automotive ventures such as Optimus (robotics), energy/solar business\n"
-        "- Relevant news about Elon Musk if it's connected to Tesla\n"
+        "- Any major updates about Elon Musk, but only if related to Tesla\n"
+        "- A quick note on Tesla’s current stock price trend, especially if it changed significantly\n"
         "- Global EV sales comparison (e.g., Tesla vs. BYD, Volkswagen, Toyota)\n\n"
         "If possible, include the source link next to the statement — but only if the link is known or provided. "
         "Do not make up links. If no URL is given, just skip it.\n\n"
