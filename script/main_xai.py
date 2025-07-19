@@ -2,7 +2,7 @@ import os
 import requests
 from openai import OpenAI
 
-# Load secrets from GitHub Actions
+# Load secrets
 webhook_url = os.getenv("DISCORD_WEBHOOK")
 xai_api_key = os.getenv("XAI_API_KEY")
 
@@ -38,26 +38,35 @@ def generate_update():
             {"role": "user", "content": prompt}
         ],
         temperature=0.7,
-        max_tokens=500,  # Adjust to ensure concise output under 5 sentences
+        max_tokens=500,
         extra_body={
             "search_parameters": {
-                "mode": "auto",  # Grok decides when to search for real-time data
-                "max_search_results": 10  # Limit to 10 sources to control costs
+                "mode": "auto",  # Grok decides when to search
+                "max_search_results": 10  # Limit to 10 sources
             }
         }
     )
-
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+    if content is None or content.strip() == "":
+        print("⚠️ xAI API returned empty or None content")
+        raise ValueError("xAI API returned empty or None content")
+    content = content.strip()
+    print(f"API response: {content[:100]}...")  # Log first 100 chars for debugging
+    return content
 
 # Send message to Discord
 def send_discord_alert(message):
+    if not message or message.strip() == "":
+        print("⚠️ Attempted to send empty message; raising error")
+        raise ValueError("Cannot send empty message to Discord")
+    
     data = {"content": message}
     headers = {"Content-Type": "application/json"}
     res = requests.post(webhook_url, json=data, headers=headers)
     if res.status_code != 204:
         print(f"❌ Failed to send alert: {res.status_code} - {res.text}")
-    else:
-        print("✅ Alert sent to Discord!")
+        raise RuntimeError(f"Discord webhook failed: {res.status_code} - {res.text}")
+    print("✅ Alert sent to Discord!")
 
 # Run
 message = generate_update()
