@@ -12,7 +12,7 @@ client = OpenAI(
     base_url="https://api.x.ai/v1"
 )
 
-# Generate Grok-powered message with real-time data
+# Generate Grok-powered message
 def generate_update():
     prompt = (
         "You are an expert automotive industry analyst. Generate a brief, concise and informative summary "
@@ -41,17 +41,18 @@ def generate_update():
         max_tokens=500,
         extra_body={
             "search_parameters": {
-                "mode": "auto",  # Grok decides when to search
-                "max_search_results": 10  # Limit to 10 sources
+                "mode": "off"  # Disable Live Search to test if it’s the issue
             }
         }
     )
+    # Log full response for debugging
+    print(f"Full API response: {response}")
     content = response.choices[0].message.content
     if content is None or content.strip() == "":
-        print("⚠️ xAI API returned empty or None content")
-        raise ValueError("xAI API returned empty or None content")
+        print(f"⚠️ xAI API returned empty or None content: {content}")
+        raise ValueError(f"xAI API returned empty or None content: {content}")
     content = content.strip()
-    print(f"API response: {content[:100]}...")  # Log first 100 chars for debugging
+    print(f"API response content: {content[:100]}...")  # Log first 100 chars
     return content
 
 # Send message to Discord
