@@ -42,8 +42,7 @@ def generate_update():
         extra_body={
             "search_parameters": {
                 "mode": "auto",  # Grok decides when to search for real-time data
-                "max_search_results": 10,  # Limit to 10 sources to control costs
-                "from_date": "2025-07-01T00:00:00Z"  # Focus on recent data (since July 1, 2025)
+                "max_search_results": 10  # Limit to 10 sources to control costs
             }
         }
     )
