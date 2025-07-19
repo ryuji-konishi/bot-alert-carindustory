@@ -21,12 +21,13 @@ def generate_update():
         "- Any major updates about Elon Musk, but only if related to Tesla\n"
         "- A quick note on Tesla’s current stock price trend, especially if it changed significantly\n"
         "- Global EV sales comparison (e.g., Tesla vs. BYD, Volkswagen, Toyota)\n"
-        "- Upcoming major events that are related to EV industry and business like Tesla's Quarterly Earnings Call\n\n"
+        "- Date the upcoming major events that are related to EV industry and business like Tesla's Quarterly Earnings Call\n\n"
         "If possible, include the source link next to the statement — but only if the link is known or provided. "
         "Do not make up links. If no URL is given, just skip it.\n\n"
         "Assume this will be posted in a Discord server for car enthusiasts and developers in Japan. "
         "Keep it under 5 sentences, and make it sound fresh and insightful. Include emojis where helpful. "
-        "If nothing major changed, still write a brief note saying so."
+        "If nothing major changed, still write a brief note saying so.\n"
+        "No need of any disclaimer or preamble, just the content.\n"
     )
 
     response = client.chat.completions.create(
