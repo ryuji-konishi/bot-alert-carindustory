@@ -1,10 +1,13 @@
 import os
 import requests
-import openai
+from openai import OpenAI
 
 # Load secrets from GitHub Actions
 webhook_url = os.getenv("DISCORD_WEBHOOK")
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Initialize OpenAI client
+client = OpenAI(api_key=openai_api_key)
 
 # Generate GPT-powered message
 def generate_update():
@@ -22,14 +25,15 @@ def generate_update():
         "If nothing major changed, still write a brief note saying so."
     )
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",  # Or "gpt-3.5-turbo" if you prefer
+    response = client.chat.completions.create(
+        model="gpt-4",  # Or "gpt-3.5-turbo"
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.7
     )
+
     return response.choices[0].message.content
 
 # Send message to Discord
