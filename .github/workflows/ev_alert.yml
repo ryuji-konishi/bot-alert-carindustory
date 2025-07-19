@@ -20,8 +20,7 @@ jobs:
 
       - name: Install dependencies
         run:
-          pip install requests
-          pip install openai
+          pip install requests openai
 
       - name: Run the alert script
         env:
