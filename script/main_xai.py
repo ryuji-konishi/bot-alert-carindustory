@@ -39,9 +39,15 @@ def generate_update():
         ],
         temperature=0.7,
         max_tokens=500,
+        # extra_body={
+        #     "search_parameters": {
+        #         "mode": "off"  # Disable Live Search to test if it’s the issue
+        #     }
+        # }
         extra_body={
             "search_parameters": {
-                "mode": "off"  # Disable Live Search to test if it’s the issue
+                "mode": "auto",  # Grok decides when to search
+                "max_search_results": 10  # Limit sources
             }
         }
     )
