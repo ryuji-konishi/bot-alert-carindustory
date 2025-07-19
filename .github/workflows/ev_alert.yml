@@ -28,25 +28,25 @@ jobs:
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
         run: python script/main_xai.py
 
-  # run-alert-openai:
-  #   runs-on: ubuntu-latest
+  run-alert-openai:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-  #     - name: Install dependencies
-  #       run:
-  #         pip install requests openai
+      - name: Install dependencies
+        run:
+          pip install requests openai
 
-  #     - name: Run the alert script
-  #       env:
-  #         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-  #         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-  #       run: python script/main_openai.py
+      - name: Run the alert script
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python script/main_openai.py
 

@@ -1,6 +1,7 @@
 import os
 import requests
 from openai import OpenAI
+from datetime import datetime
 
 # Load secrets from GitHub Actions
 webhook_url = os.getenv("DISCORD_WEBHOOK")
@@ -56,4 +57,6 @@ message = generate_update()
 if len(message) > 2000:
     message = message[:1990] + "\n...[truncated]"
 
+today = datetime.now().strftime("%Y-%m-%d")
+send_discord_alert(f"📅 {today} – Today's Tesla Update [OpenAI version]\n")
 send_discord_alert(message)
