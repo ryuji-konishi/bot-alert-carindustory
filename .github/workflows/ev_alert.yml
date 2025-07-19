@@ -2,7 +2,7 @@ name: Car Industry Alert Bot
 
 on:
   schedule:
-    - cron: '0 23 * * *'  # Runs every day at 08:00 JST
+    - cron: '0 21 * * *'  # Runs every day at 06:00 JST
   workflow_dispatch:       # Optional: manual trigger
 
 jobs:
