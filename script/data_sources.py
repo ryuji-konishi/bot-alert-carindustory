@@ -17,7 +17,7 @@ def fetch_stock_summary():
 
 
 def fetch_latest_news(count=3):
-    api_key = os.getenv("NEWS_API_KEY")
+    api_key = os.getenv("GNEWS_API_KEY")
     if not api_key:
         return []
     url = (
