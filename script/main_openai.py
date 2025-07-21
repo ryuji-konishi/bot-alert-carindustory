@@ -55,7 +55,8 @@ def send_discord_alert(message):
 message = generate_update()
 # Limit message length for Discord
 if len(message) > 2000:
-    message = message[:1990] + "\n...[truncated]"
+    slice_length = 2000 - len("\n...[truncated]")
+    message = message[:slice_length] + "\n...[truncated]"
 
 today = datetime.now().strftime("%Y-%m-%d")
 send_discord_alert(f"📅 {today} – Today's Tesla Update [OpenAI version]\n")
