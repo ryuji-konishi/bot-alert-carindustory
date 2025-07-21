@@ -20,12 +20,13 @@ jobs:
 
       - name: Install dependencies
         run:
-          pip install requests openai
+          pip install requests openai yfinance beautifulsoup4
 
       - name: Run the alert script
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
         run: python script/main_xai.py
 
   run-alert-openai:
@@ -42,11 +43,12 @@ jobs:
 
       - name: Install dependencies
         run:
-          pip install requests openai
+          pip install requests openai yfinance beautifulsoup4
 
       - name: Run the alert script
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
         run: python script/main_openai.py
 
