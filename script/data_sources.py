@@ -31,7 +31,10 @@ def fetch_latest_news(count=3):
 
 
 def fetch_next_earnings():
-    res = requests.get("https://ir.tesla.com", timeout=10)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+    res = requests.get("https://ir.tesla.com", headers=headers, timeout=10)
     res.raise_for_status()
     soup = BeautifulSoup(res.text, "html.parser")
     event_view = soup.find("div", class_="view-company-events")
