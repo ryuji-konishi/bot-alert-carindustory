@@ -2,6 +2,11 @@ import os
 import requests
 from openai import OpenAI
 from datetime import datetime
+from data_sources import (
+    fetch_latest_news,
+    fetch_next_earnings,
+    fetch_stock_summary,
+)
 
 # Load secrets
 webhook_url = os.getenv("DISCORD_WEBHOOK")
@@ -15,28 +20,30 @@ client = OpenAI(
 
 # Generate Grok-powered message
 def generate_update():
+    news = fetch_latest_news()
+    stock = fetch_stock_summary()
+    earnings = fetch_next_earnings()
+
+    lines = []
+    if news:
+        lines.append("Recent News:")
+        lines.extend(f"- {n}" for n in news)
+    if stock:
+        lines.append(f"Stock: {stock}")
+    if earnings:
+        lines.append(f"Next earnings: {earnings}")
+
     prompt = (
-        "You are an expert automotive industry analyst. Generate a brief, concise and informative summary "
-        "about the very latest developments and daily trends in the automotive sector, especially related to Tesla. "
-        "Focus on:\n"
-        "- The most recent and notable daily news involving Tesla or the broader EV industry\n"
-        "- Tesla’s vehicle business\n"
-        "- Tesla’s non-automotive ventures such as Optimus (robotics), energy/solar business\n"
-        "- Any major updates about Elon Musk, and its impact to Tesla\n"
-        "- A quick note on Tesla’s current stock price trend and its reason, especially if it changed significantly\n"
-        "- If any, date the imminent major events that are related to EV industry and business like Tesla's Quarterly Earnings Call\n\n"
-        "If possible, include the source link next to the statement — but only if the link is known or provided. "
-        "Do not make up links. If no URL is given, just skip it. No need to say like source link not provided.\n\n"
-        "Assume this will be posted in a Discord server for car enthusiasts and developers in Japan. "
-        "Keep it under 5 sentences, and make it sound fresh and insightful. Include emojis where helpful. "
-        "If nothing major changed, still write a brief note saying so.\n"
+        "Summarize the following Tesla-related information for a Discord post. "
+        "Limit the summary to about five sentences and include emojis if they help readability.\n\n"
+        + "\n".join(lines)
     )
 
     response = client.chat.completions.create(
         model="grok-4",  # Use Grok 4 (Grok 3 not available for API as of July 19, 2025)
         messages=[
-            {"role": "system", "content": "You are a helpful assistant providing real-time information."},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": "You summarize given information."},
+            {"role": "user", "content": prompt},
         ],
         temperature=0.7,
         max_tokens=500,
