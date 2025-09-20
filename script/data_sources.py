@@ -32,10 +32,22 @@ def fetch_latest_news(count=3):
 
 def fetch_next_earnings():
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/117.0.0.0 Safari/537.36"
+        ),
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Connection": "keep-alive",
+        "Referer": "https://www.google.com/"
     }
-    res = requests.get("https://ir.tesla.com", headers=headers, timeout=10)
-    res.raise_for_status()
+    try:
+        res = requests.get("https://ir.tesla.com", headers=headers, timeout=10)
+        res.raise_for_status()
+    except requests.exceptions.HTTPError:
+        return "N/A"
+
     soup = BeautifulSoup(res.text, "html.parser")
     event_view = soup.find("div", class_="view-company-events")
     if not event_view:
